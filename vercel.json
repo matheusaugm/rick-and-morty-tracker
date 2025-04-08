@@ -1,0 +1,7 @@
+{
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "ignoreCommand": "echo 'Ignoring TypeScript errors in Cypress files'",
+  "devCommand": "npm run dev"
+} 

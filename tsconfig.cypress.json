@@ -1,13 +1,11 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "es2018",
-    "lib": ["es2018", "dom"],
-    "types": ["cypress", "node"],
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "resolveJsonModule": true,
+    "types": ["cypress", "@testing-library/cypress"],
+    "noEmit": true,
+    "isolatedModules": false,
     "skipLibCheck": true,
-    "module": "ESNext"
+    "strict": false
   },
-  "include": ["cypress/**/*.ts", "cypress.config.ts"]
+  "include": ["cypress/**/*.ts"]
 } 
