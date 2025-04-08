@@ -1,0 +1,6 @@
+/* Custom styles that won't conflict with Tailwind */
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+} 
