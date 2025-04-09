@@ -8,7 +8,7 @@ interface LanguageSwitcherProps {
 }
 
 export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
-  const { t, i18n } = useTranslation('common');
+  const { i18n } = useTranslation('common');
   const currentLanguage = i18n.language || 'en-US';
 
   const changeLanguage = useCallback((lng: string) => {
