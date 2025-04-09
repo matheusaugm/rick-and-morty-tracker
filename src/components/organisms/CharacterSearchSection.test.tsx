@@ -100,7 +100,7 @@ describe('CharacterSearchSection Component', () => {
     expect(screen.queryByText('enterSearchTerm')).not.toBeInTheDocument();
   });
   
-  it('shows error message when search is empty', () => {
+  it('allows empty search to fetch all characters', () => {
     render(<CharacterSearchSection onSearch={mockOnSearch} />);
     
     // Set search input value to empty
@@ -110,11 +110,11 @@ describe('CharacterSearchSection Component', () => {
     // Click search button
     fireEvent.click(screen.getByTestId('search-button'));
     
-    // onSearch should not be called
-    expect(mockOnSearch).not.toHaveBeenCalled();
+    // onSearch should be called with empty string (changed behavior)
+    expect(mockOnSearch).toHaveBeenCalledWith('');
     
-    // Error message should be displayed
-    expect(screen.getByText('enterSearchTerm')).toBeInTheDocument();
+    // No error message should be displayed anymore
+    expect(screen.queryByText('enterSearchTerm')).not.toBeInTheDocument();
   });
   
   it('uses initialQuery when provided', () => {

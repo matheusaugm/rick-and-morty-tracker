@@ -20,13 +20,8 @@ export function CharacterSearchSection({
   const [searchError, setSearchError] = useState<string | null>(null);
 
   const handleSearch = (query: string) => {
-    if (query.trim().length === 0) {
-      setSearchError(t('enterSearchTerm'));
-      return;
-    }
-    
     setSearchError(null);
-    onSearch(query);
+    onSearch(query.trim());
   };
 
   return (

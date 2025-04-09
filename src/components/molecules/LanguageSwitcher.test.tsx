@@ -21,6 +21,18 @@ vi.mock('react-i18next', () => {
   };
 });
 
+// Create a mock for useHtmlLang with a spy function for changeLang
+const changeLangMock = vi.fn();
+vi.mock('../../hooks/useHtmlLang', () => ({
+  useHtmlLang: () => ({
+    changeLang: changeLangMock,
+    useBrowserLanguage: vi.fn(),
+    currentLang: 'en-US',
+    htmlLang: 'en',
+    getCurrentLang: () => 'en'
+  })
+}));
+
 import { describe, it, expect, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '../../test/test-utils-mocked';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -87,7 +99,7 @@ describe('LanguageSwitcher Component', () => {
   });
   
   it('changes language when a language button is clicked', () => {
-    // Create a mock with access to the changeLanguage function
+    // Create mocks
     const changeLanguageMock = vi.fn();
     useTranslationMock.mockReturnValue({
       t: (key: string) => key,
@@ -102,15 +114,15 @@ describe('LanguageSwitcher Component', () => {
     // Click the Portuguese button
     fireEvent.click(screen.getByText('PT'));
     
-    // Should call changeLanguage with 'pt-BR'
-    expect(changeLanguageMock).toHaveBeenCalledWith('pt-BR');
+    // Should call changeLang from useHtmlLang with 'pt-BR'
+    expect(changeLangMock).toHaveBeenCalledWith('pt-BR');
     
     // Should set localStorage
     expect(localStorageMock.setItem).toHaveBeenCalledWith('i18nextLng', 'pt-BR');
   });
   
   it('does not change language if clicking the current language button', () => {
-    // Create a mock with access to the changeLanguage function
+    // Mock with English selected
     const changeLanguageMock = vi.fn();
     useTranslationMock.mockReturnValue({
       t: (key: string) => key,
@@ -125,7 +137,8 @@ describe('LanguageSwitcher Component', () => {
     // Click the English button (which is already selected)
     fireEvent.click(screen.getByText('EN'));
     
-    // Should not call changeLanguage
+    // Should not call changeLanguage or changeLang
+    expect(changeLangMock).not.toHaveBeenCalled();
     expect(changeLanguageMock).not.toHaveBeenCalled();
     
     // Should not set localStorage
