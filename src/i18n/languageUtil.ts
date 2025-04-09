@@ -9,9 +9,8 @@
 export function getBrowserLanguage(): string {
   // Get browser language from navigator
   const browserLang = navigator.language || 
-    // @ts-ignore - Some older browsers use languages array instead
     (navigator.languages && navigator.languages[0]) || 
-    // @ts-ignore - For IE/older browsers
+    // @ts-expect-error - For IE/older browsers
     navigator.userLanguage || 
     'pt-BR'; // Default fallback
     
