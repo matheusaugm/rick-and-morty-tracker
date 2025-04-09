@@ -31,6 +31,10 @@ jobs:
       run: npm run lint || true
     
     - name: Run unit tests
+      # Add a CI environment variable to disable Fast Refresh warnings
+      env:
+        CI: true
+        NODE_ENV: test
       run: npm test
       
     - name: Generate test coverage report
@@ -39,5 +43,5 @@ jobs:
     - name: Archive code coverage results
       uses: actions/upload-artifact@v4
       with:
-        name: code-coverage-report
+        name: code-coverage-report-node-${{ matrix.node-version }}
         path: coverage/ 
