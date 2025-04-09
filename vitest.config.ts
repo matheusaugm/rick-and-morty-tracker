@@ -47,6 +47,8 @@ export default defineConfig({
         '**/src/i18n/**',
         '**/src/hooks/useCharacters.ts',
         '**/src/pages/CharactersPage.tsx',
+        '**/src/hooks/useHtmlLang.ts',
+        '**/src/i18n/languageUtil.ts',
         '**/src/services/api.ts',
         
         // Generated files
