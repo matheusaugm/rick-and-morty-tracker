@@ -27,6 +27,11 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
     changeLang(lng);
     localStorage.setItem('i18nextLng', lng);
   }, [currentLanguage, changeLang]);
+  
+  // Create a separate handler for browser language button
+  const handleBrowserLanguage = useCallback(() => {
+    useBrowserLanguage();
+  }, [useBrowserLanguage]);
 
   useEffect(() => {
     if (!localStorage.getItem('i18nextLng')) {
@@ -66,7 +71,7 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
       <Button
         title={t('useBrowserLanguage', 'Use browser language')}
         data-testid="lang-browser"
-        onClick={() => useBrowserLanguage()}
+        onClick={handleBrowserLanguage}
         variant="ghost"
         className="py-1 px-2 text-xs font-medium min-w-8 text-gray-300 hover:text-white hover:bg-gray-800/50"
       >
