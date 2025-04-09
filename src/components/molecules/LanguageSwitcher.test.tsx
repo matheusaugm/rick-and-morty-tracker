@@ -23,10 +23,11 @@ vi.mock('react-i18next', () => {
 
 // Create a mock for useHtmlLang with a spy function for changeLang
 const changeLangMock = vi.fn();
+const applyBrowserLanguageMock = vi.fn();
 vi.mock('../../hooks/useHtmlLang', () => ({
   useHtmlLang: () => ({
     changeLang: changeLangMock,
-    useBrowserLanguage: vi.fn(),
+    applyBrowserLanguage: applyBrowserLanguageMock,
     currentLang: 'en-US',
     htmlLang: 'en',
     getCurrentLang: () => 'en'

@@ -8,14 +8,13 @@ interface LanguageSwitcherProps {
   className?: string;
 }
 
-
 function normalizeLanguageCode(lang: string): string {
   return lang.toLowerCase().split('-')[0];
 }
 
 export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   const { t, i18n } = useTranslation('common');
-  const { changeLang, useBrowserLanguage } = useHtmlLang();
+  const { changeLang, applyBrowserLanguage } = useHtmlLang();
   const currentLanguage = i18n.language || 'pt-BR';
 
   const handleLanguageChange = useCallback((lng: string) => {
@@ -28,16 +27,17 @@ export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
     localStorage.setItem('i18nextLng', lng);
   }, [currentLanguage, changeLang]);
   
-  // Create a separate handler for browser language button
   const handleBrowserLanguage = useCallback(() => {
-    useBrowserLanguage();
-  }, [useBrowserLanguage]);
+    applyBrowserLanguage();
+  }, [applyBrowserLanguage]);
 
   useEffect(() => {
-    if (!localStorage.getItem('i18nextLng')) {
-      useBrowserLanguage();
+    const hasStoredLanguage = localStorage.getItem('i18nextLng');
+    if (!hasStoredLanguage) {
+      
+      handleBrowserLanguage();
     }
-  }, [useBrowserLanguage]);
+  }, [handleBrowserLanguage]); 
 
   const isEnglish = currentLanguage.startsWith('en');
   const isPortuguese = currentLanguage.startsWith('pt');

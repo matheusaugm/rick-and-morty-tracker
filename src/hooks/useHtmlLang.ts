@@ -44,7 +44,7 @@ export function useHtmlLang() {
   /**
    * Gets the browser's language and applies it
    */
-  const useBrowserLanguage = useCallback(() => {
+  const applyBrowserLanguage = useCallback(() => {
     const browserLang = getBrowserLanguage();
     const normalizedLang = normalizeLanguage(browserLang);
     const mappedLanguage = normalizedLang === 'en' ? 'en-US' : 'pt-BR';
@@ -57,6 +57,6 @@ export function useHtmlLang() {
     htmlLang: getCurrentLang(),
     changeLang,
     getCurrentLang,
-    useBrowserLanguage
+    applyBrowserLanguage
   };
 } 
