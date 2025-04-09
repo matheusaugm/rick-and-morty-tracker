@@ -3,12 +3,10 @@
 
 A modern web application for exploring characters from the Rick and Morty universe. This interactive app allows you to search for your favorite characters, view their details, and navigate through the multiverse with a sleek, responsive UI.
 
-### Known bugs:
-- **Modal**: if you open the modal while portal mode is opened, it will not open where it is supposed to.
+### Known improvements:
 
-- **Font**: if you use sans serif in smaller devices, it's going to cause a small responsive issue on the language switcher
+- **Font**: if you use dark mode and portal mode on, in some places the glassmorphism can make it hard to read the text, you can hide the portal to make it easier to read if it troubles you
 
-- **Dark mode**: if you're in portal mode, dark and light mode will only lighten/darken a bit of the glassmorphism effect
 
 ## Features
 

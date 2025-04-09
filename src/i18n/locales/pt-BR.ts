@@ -1,6 +1,6 @@
 const ptBR = {
   common: {
-    title: 'Rick and Morty',
+    title: 'Rick and Morty Tracker',
     loading: 'Carregando...',
     noCharactersFound: 'Nenhum personagem encontrado',
     errorLoading: 'Falha ao carregar personagens. Por favor, tente novamente.',

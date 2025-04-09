@@ -1,6 +1,6 @@
 const enUS = {
   common: {
-    title: 'Rick and Morty',
+    title: 'Rick and Morty Tracker',
     loading: 'Loading...',
     noCharactersFound: 'No characters found',
     errorLoading: 'Failed to load characters. Please try again.',

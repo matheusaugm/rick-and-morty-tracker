@@ -14,7 +14,7 @@ const createI18nMock = (language = 'en-US') => {
         searchPlaceholder: 'Search for a character...',
         searchButton: 'Search',
         close: 'Close',
-        title: 'Rick and Morty',
+        title: 'Rick and Morty Tracker',
         alive: 'Alive',
         dead: 'Dead',
         unknown: 'Unknown',
