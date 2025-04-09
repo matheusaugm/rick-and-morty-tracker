@@ -107,3 +107,10 @@ npm run lint:fix   # Fix lint errors automatically
 ## API
 
 This project uses the [Rick and Morty API](https://rickandmortyapi.com/) to fetch character data.
+
+
+## Credits 
+
+- [Rick and Morty API](https://rickandmortyapi.com/)
+- [Font creator post](https://www.reddit.com/r/rickandmorty/comments/pxyg17/ive_made_new_rick_and_morty_font_called_wubba/)
+- [Glowing button creator](https://codepen.io/kocsten/pen/rggjXp)
