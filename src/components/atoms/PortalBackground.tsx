@@ -197,6 +197,7 @@ export function PortalBackground({ className }: PortalBackgroundProps) {
           width: '100vw',
           height: '100vh',
           zIndex: -10,
+          overflow: 'hidden'
         }}
       />
       <div
@@ -210,6 +211,7 @@ export function PortalBackground({ className }: PortalBackgroundProps) {
           backgroundColor: 'rgba(255, 255, 255, 0.05)',
           zIndex: -5,
           pointerEvents: 'none',
+          overflow: 'hidden'
         }}
       />
     </>

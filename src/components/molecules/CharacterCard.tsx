@@ -6,6 +6,7 @@ import { Text } from '../atoms/Text';
 import { Image } from '../atoms/Image';
 import { usePortal } from '../../contexts/PortalContext';
 import { CharacterDetailModal } from './CharacterDetailModal';
+import { Portal } from '../atoms/Portal';
 
 interface CharacterCardProps {
   character: Character;
@@ -128,12 +129,16 @@ export function CharacterCard({ character, className }: CharacterCardProps) {
         </div>
       </div>
 
-      {/* Character Detail Modal */}
-      <CharacterDetailModal 
-        character={character}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {/* Character Detail Modal - Rendered in a portal directly to body */}
+      {isModalOpen && (
+        <Portal>
+          <CharacterDetailModal 
+            character={character}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+          />
+        </Portal>
+      )}
     </>
   );
 } 

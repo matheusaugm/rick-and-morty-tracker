@@ -5,6 +5,7 @@ import { cn } from '../../lib/utils';
 import { Text } from '../atoms/Text';
 import { Image } from '../atoms/Image';
 import { usePortal } from '../../contexts/PortalContext';
+import { useFontPreference } from '../../contexts/FontContext';
 
 
 interface Episode {
@@ -23,6 +24,7 @@ interface CharacterDetailModalProps {
 export function CharacterDetailModal({ character, isOpen, onClose }: CharacterDetailModalProps) {
   const { t } = useTranslation('common');
   const { showPortal } = usePortal();
+  const { isRickMode } = useFontPreference();
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -76,6 +78,15 @@ export function CharacterDetailModal({ character, isOpen, onClose }: CharacterDe
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
 
@@ -96,10 +107,29 @@ export function CharacterDetailModal({ character, isOpen, onClose }: CharacterDe
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-50 p-4">
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 9999,
+      padding: '1rem'
+    }}>
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm" 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: showPortal ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)',
+          backdropFilter: 'blur(3px)'
+        }}
         onClick={onClose}
       />
       
@@ -107,17 +137,28 @@ export function CharacterDetailModal({ character, isOpen, onClose }: CharacterDe
       <div 
         data-testid="character-modal"
         className={cn(
-          "relative max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl",
+          "w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl",
           "p-6 animate-in fade-in zoom-in-95 duration-300",
           showPortal
             ? "backdrop-blur-md bg-black/40 border border-white/20"
-            : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+            : "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700",
+          isRickMode && showPortal && "font-wubba text-green-400"
         )}
+        style={{
+          position: 'relative',
+          zIndex: 1
+        }}
+        onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
         <button 
           onClick={onClose} 
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200/20 text-gray-400 hover:text-white z-10"
+          className={cn(
+            "absolute top-4 right-4 p-2 rounded-full z-10",
+            showPortal
+              ? "bg-black/40 hover:bg-black/60 text-white hover:text-white"
+              : "hover:bg-gray-200/20 text-gray-400 hover:text-white"
+          )}
           aria-label="Close"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -148,7 +189,8 @@ export function CharacterDetailModal({ character, isOpen, onClose }: CharacterDe
                 )}></div>
                 <Text color={getStatusColor(character.status)} className={cn(
                   "font-medium",
-                  showPortal ? "text-shadow text-white" : ""
+                  showPortal ? "text-shadow text-white" : "",
+                  isRickMode && showPortal && "text-green-400"
                 )}>
                   {t(character.status.toLowerCase(), character.status)} - {character.species}
                 </Text>
@@ -159,11 +201,13 @@ export function CharacterDetailModal({ character, isOpen, onClose }: CharacterDe
           {/* Character Details */}
           <div className={cn(
             "md:w-2/3",
-            showPortal ? "text-white" : "text-gray-900 dark:text-white"
+            showPortal ? "text-white" : "text-gray-900 dark:text-white",
+            isRickMode && showPortal && "text-green-400"
           )}>
             <h2 className={cn(
               "text-3xl font-bold mb-4",
-              showPortal ? "text-shadow" : ""
+              showPortal ? "text-shadow" : "",
+              isRickMode && showPortal && "text-green-500"
             )}>
               {character.name}
             </h2>
@@ -177,10 +221,18 @@ export function CharacterDetailModal({ character, isOpen, onClose }: CharacterDe
                   : "bg-gray-100 dark:bg-gray-700"
               )}>
                 <div className="space-y-2">
-                  <Text variant="label" className={cn("font-medium", showPortal ? "text-shadow" : "")}>
+                  <Text variant="label" className={cn(
+                    "font-medium", 
+                    showPortal ? "text-shadow" : "",
+                    isRickMode && showPortal && "text-green-300"
+                  )}>
                     {t('gender')}:
                   </Text>
-                  <Text className={cn("pl-2", showPortal ? "text-shadow" : "")}>
+                  <Text className={cn(
+                    "pl-2", 
+                    showPortal ? "text-shadow" : "",
+                    isRickMode && showPortal && "text-green-400"
+                  )}>
                     {character.gender}
                   </Text>
                 </div>
@@ -226,13 +278,22 @@ export function CharacterDetailModal({ character, isOpen, onClose }: CharacterDe
 
               {/* Episodes */}
               <div className="mt-8">
-                <Text variant="subtitle" className={cn("mb-4", showPortal ? "text-shadow" : "")}>
+                <Text variant="subtitle" className={cn(
+                  "mb-4", 
+                  showPortal ? "text-shadow" : "",
+                  isRickMode && showPortal && "text-green-300"
+                )}>
                   {t('episodes')}:
                 </Text>
                 
                 {loading ? (
                   <div className="flex justify-center py-8">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+                    <div className={cn(
+                      "animate-spin rounded-full h-8 w-8",
+                      showPortal
+                        ? "border-t-2 border-b-2 border-green-400"
+                        : "border-t-2 border-b-2 border-gray-400 dark:border-white"
+                    )}></div>
                   </div>
                 ) : (
                   <div className={cn(
@@ -246,8 +307,9 @@ export function CharacterDetailModal({ character, isOpen, onClose }: CharacterDe
                         <thead className={cn(
                           "sticky top-0",
                           showPortal
-                            ? "bg-black/50"
-                            : "bg-gray-200 dark:bg-gray-600"
+                            ? "bg-black/50 text-white text-shadow"
+                            : "bg-gray-200 dark:bg-gray-600",
+                          isRickMode && showPortal && "text-white"
                         )}>
                           <tr>
                             <th className="py-3 px-4 text-left font-medium">{t('episode')}</th>
@@ -260,8 +322,9 @@ export function CharacterDetailModal({ character, isOpen, onClose }: CharacterDe
                             <tr key={episode.id} className={cn(
                               "border-t",
                               showPortal
-                                ? "border-white/10 hover:bg-white/10"
-                                : "border-gray-200 dark:border-gray-600 hover:bg-gray-200/50 dark:hover:bg-gray-600/50"
+                                ? "border-white/10 hover:bg-white/10 text-white text-shadow"
+                                : "border-gray-200 dark:border-gray-600 hover:bg-gray-200/50 dark:hover:bg-gray-600/50",
+                              isRickMode && showPortal && "text-white"
                             )}>
                               <td className="py-3 px-4 font-mono">{episode.episode}</td>
                               <td className="py-3 px-4">{episode.name}</td>

@@ -50,6 +50,8 @@ vi.mock('../atoms/Text', () => ({
   Text: ({ children, className }: { children: React.ReactNode, className?: string }) => <div className={className}>{children}</div>
 }));
 
+// LanguageSwitcher is no longer used in this component, so we don't need to mock it
+// But keeping the mock for backward compatibility
 vi.mock('../molecules/LanguageSwitcher', () => ({
   LanguageSwitcher: () => <div data-testid="language-switcher" />
 }));
@@ -71,9 +73,11 @@ describe('CharacterSearchSection Component', () => {
     // Title should be visible
     expect(screen.getByText('title')).toBeInTheDocument();
     
-    // Utility components should be rendered
+    // Mode toggle should be rendered
     expect(screen.getByTestId('mode-toggle')).toBeInTheDocument();
-    expect(screen.getByTestId('language-switcher')).toBeInTheDocument();
+    
+    // Language switcher has been moved to App.tsx, so it should not be present
+    expect(screen.queryByTestId('language-switcher')).not.toBeInTheDocument();
     
     // Search bar should be rendered
     expect(screen.getByTestId('mock-search-bar')).toBeInTheDocument();

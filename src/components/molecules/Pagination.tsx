@@ -20,77 +20,116 @@ export function Pagination({
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
-    const maxPagesToShow = 5;
+
+    const maxVisibleButtons = 5;
     
-    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-    const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
-    
-    if (endPage - startPage + 1 < maxPagesToShow) {
-      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+
+    if (totalPages <= maxVisibleButtons) {
+      for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(
+          <Button
+            key={i}
+            onClick={() => onPageChange(i)}
+            variant="pagination"
+            data-testid={`page-button-${i}`}
+            className={clsx({
+              'bg-green-500 text-white dark:bg-green-600 dark:text-white': currentPage === i
+            })}
+          >
+            {i}
+          </Button>
+        );
+      }
+      return pageNumbers;
     }
     
 
-    if (startPage > 1) {
-      pageNumbers.push(
-        <Button
-          key="first"
-          onClick={() => onPageChange(1)}
-          variant="pagination"
-          data-testid="page-button-1"
-        >
-          1
-        </Button>
-      );
-      
 
-      if (startPage > 2) {
+
+    
+
+    pageNumbers.push(
+      <Button
+        key={1}
+        onClick={() => onPageChange(1)}
+        variant="pagination"
+        data-testid="page-button-1"
+        className={clsx({
+          'bg-green-500 text-white dark:bg-green-600 dark:text-white': currentPage === 1
+        })}
+      >
+        1
+      </Button>
+    );
+    
+
+    let middleStart, middleEnd;
+    
+    if (currentPage <= 3) {
+
+      middleStart = 2;
+      middleEnd = 3;
+    } else if (currentPage >= totalPages - 2) {
+
+      middleStart = totalPages - 2;
+      middleEnd = totalPages - 1;
+    } else {
+
+      middleStart = currentPage - 1;
+      middleEnd = currentPage + 1;
+    }
+    
+
+    if (middleStart > 2) {
+      pageNumbers.push(
+        <span key="ellipsis-start" className="px-2 text-gray-600 dark:text-gray-400">
+          ...
+        </span>
+      );
+    }
+    
+
+    for (let i = middleStart; i <= middleEnd; i++) {
+      if (i > 1 && i < totalPages) {
         pageNumbers.push(
-          <span key="ellipsis-start" className="px-2 text-gray-600 dark:text-gray-400">
-            ...
-          </span>
+          <Button
+            key={i}
+            onClick={() => onPageChange(i)}
+            variant="pagination"
+            data-testid={`page-button-${i}`}
+            className={clsx({
+              'bg-green-500 text-white dark:bg-green-600 dark:text-white': currentPage === i
+            })}
+          >
+            {i}
+          </Button>
         );
       }
     }
     
 
-    for (let i = startPage; i <= endPage; i++) {
+    if (middleEnd < totalPages - 1) {
       pageNumbers.push(
-        <Button
-          key={i}
-          onClick={() => onPageChange(i)}
-          variant="pagination"
-          data-testid={`page-button-${i}`}
-          className={clsx({
-            'bg-green-500 text-white dark:bg-green-600 dark:text-white': currentPage === i
-          })}
-        >
-          {i}
-        </Button>
+        <span key="ellipsis-end" className="px-2 text-gray-600 dark:text-gray-400">
+          ...
+        </span>
       );
     }
     
 
-    if (endPage < totalPages) {
-
-      if (endPage < totalPages - 1) {
-        pageNumbers.push(
-          <span key="ellipsis-end" className="px-2 text-gray-600 dark:text-gray-400">
-            ...
-          </span>
-        );
-      }
-      
-      pageNumbers.push(
-        <Button
-          key="last"
-          onClick={() => onPageChange(totalPages)}
-          variant="pagination"
-          data-testid={`page-button-${totalPages}`}
-        >
-          {totalPages}
-        </Button>
-      );
-    }
+    pageNumbers.push(
+      <Button
+        key={totalPages}
+        onClick={() => onPageChange(totalPages)}
+        variant="pagination"
+        data-testid={`page-button-${totalPages}`}
+        className={clsx({
+          'bg-green-500 text-white dark:bg-green-600 dark:text-white': currentPage === totalPages
+        })}
+      >
+        {totalPages}
+      </Button>
+    );
     
     return pageNumbers;
   };

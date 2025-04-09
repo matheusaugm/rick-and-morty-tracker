@@ -56,12 +56,9 @@ describe('LanguageSwitcher Component', () => {
   it('renders language options correctly', () => {
     render(<LanguageSwitcher />);
     
-    // Should show the change language text
-    expect(screen.getByText('changeLanguage:')).toBeInTheDocument();
-    
-    // Should show language buttons
-    expect(screen.getByText('en')).toBeInTheDocument();
-    expect(screen.getByText('pt')).toBeInTheDocument();
+    // Should show language buttons with the updated text
+    expect(screen.getByText('EN')).toBeInTheDocument();
+    expect(screen.getByText('PT')).toBeInTheDocument();
   });
   
   it('highlights current language button (English)', () => {
@@ -76,9 +73,9 @@ describe('LanguageSwitcher Component', () => {
     
     render(<LanguageSwitcher />);
     
-    // English button should have aria-current="true" or other selected indication
-    const englishButton = screen.getByText('en');
-    const portugueseButton = screen.getByText('pt');
+    // English button should have different styling than Portuguese button
+    const englishButton = screen.getByText('EN');
+    const portugueseButton = screen.getByText('PT');
     
     // Since the actual classes have changed with shadcn, check the button's parent element
     // which likely contains variant-specific styling
@@ -103,7 +100,7 @@ describe('LanguageSwitcher Component', () => {
     render(<LanguageSwitcher />);
     
     // Click the Portuguese button
-    fireEvent.click(screen.getByText('pt'));
+    fireEvent.click(screen.getByText('PT'));
     
     // Should call changeLanguage with 'pt-BR'
     expect(changeLanguageMock).toHaveBeenCalledWith('pt-BR');
@@ -126,7 +123,7 @@ describe('LanguageSwitcher Component', () => {
     render(<LanguageSwitcher />);
     
     // Click the English button (which is already selected)
-    fireEvent.click(screen.getByText('en'));
+    fireEvent.click(screen.getByText('EN'));
     
     // Should not call changeLanguage
     expect(changeLanguageMock).not.toHaveBeenCalled();
@@ -138,8 +135,8 @@ describe('LanguageSwitcher Component', () => {
   it('applies custom className when provided', () => {
     render(<LanguageSwitcher className="custom-class" />);
     
-    // The container should have the custom class
-    const container = screen.getByText('changeLanguage:').closest('div');
+    // The container should have the custom class - find it by test ID since text is gone
+    const container = screen.getByTestId('language-switcher');
     expect(container).toHaveClass('custom-class');
     expect(container).toHaveClass('flex');
   });

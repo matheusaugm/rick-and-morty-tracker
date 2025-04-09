@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { SearchBar } from '../molecules/SearchBar';
 import { Text } from '../atoms/Text';
-import { LanguageSwitcher } from '../molecules/LanguageSwitcher';
 import { ModeToggle } from '../atoms/ModeToggle';
 
 interface CharacterSearchSectionProps {
@@ -38,7 +37,6 @@ export function CharacterSearchSection({
         </Text>
         <div className="flex items-center gap-3">
           <ModeToggle />
-          <LanguageSwitcher />
         </div>
       </div>
       

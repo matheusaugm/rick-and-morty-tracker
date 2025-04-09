@@ -1,13 +1,13 @@
 import { useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import clsx from 'clsx';
+import { cn } from '../../lib/utils';
 import { Button } from '../atoms/Button';
 
 interface LanguageSwitcherProps {
   className?: string;
 }
 
-export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
+export function LanguageSwitcher({ className }: LanguageSwitcherProps) {
   const { t, i18n } = useTranslation('common');
   const currentLanguage = i18n.language || 'en-US';
 
@@ -20,7 +20,6 @@ export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
 
   useEffect(() => {
     const handleInitialLanguage = () => {
-
       if (!currentLanguage || (!currentLanguage.startsWith('en') && !currentLanguage.startsWith('pt'))) {
         changeLanguage('en-US');
         return;
@@ -40,30 +39,31 @@ export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
   }, [currentLanguage, changeLanguage]);
 
   return (
-    <div data-testid="language-switcher" className={clsx('flex items-center space-x-2', className)}>
-      <span data-testid="language-label" className="text-sm text-gray-600">{t('changeLanguage')}:</span>
-      <div className="flex space-x-1">
-        <Button
-          data-testid="lang-en"
-          onClick={() => changeLanguage('en-US')}
-          variant="secondary"
-          className={clsx('py-1 px-2 text-sm', {
-            'bg-blue-100 border border-blue-500': currentLanguage.startsWith('en'),
-          })}
-        >
-          {t('en')}
-        </Button>
-        <Button
-          data-testid="lang-pt"
-          onClick={() => changeLanguage('pt-BR')}
-          variant="secondary"
-          className={clsx('py-1 px-2 text-sm', {
-            'bg-blue-100 border border-blue-500': currentLanguage.startsWith('pt'),
-          })}
-        >
-          {t('pt')}
-        </Button>
-      </div>
+    <div data-testid="language-switcher" className={cn('flex items-center gap-1', className)}>
+      <Button
+        data-testid="lang-en"
+        onClick={() => changeLanguage('en-US')}
+        variant={currentLanguage.startsWith('en') ? "primary" : "ghost"}
+        className={cn('py-1 px-2 text-xs font-medium min-w-8', 
+          currentLanguage.startsWith('en') 
+            ? 'bg-green-600 text-white hover:bg-green-700' 
+            : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+        )}
+      >
+        EN
+      </Button>
+      <Button
+        data-testid="lang-pt"
+        onClick={() => changeLanguage('pt-BR')}
+        variant={currentLanguage.startsWith('pt') ? "primary" : "ghost"}
+        className={cn('py-1 px-2 text-xs font-medium min-w-8', 
+          currentLanguage.startsWith('pt') 
+            ? 'bg-green-600 text-white hover:bg-green-700' 
+            : 'text-gray-300 hover:text-white hover:bg-gray-800/50'
+        )}
+      >
+        PT
+      </Button>
     </div>
   );
 } 

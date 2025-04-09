@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor } from '../../test/test-utils';
 import { CharacterDetailModal } from './CharacterDetailModal';
 import { mockCharacter, mockEpisodes } from '../../test/mocks/characterMock';
 import * as PortalContext from '../../contexts/PortalContext';
+import * as FontContext from '../../contexts/FontContext';
 
 // Mock fetch for episode data
 global.fetch = vi.fn();
@@ -16,6 +17,15 @@ vi.mock('../../contexts/PortalContext', async () => {
   };
 });
 
+// Mock the useFontPreference hook
+vi.mock('../../contexts/FontContext', async () => {
+  const actual = await vi.importActual('../../contexts/FontContext');
+  return {
+    ...actual,
+    useFontPreference: vi.fn().mockReturnValue({ isRickMode: false })
+  };
+});
+
 describe('CharacterDetailModal Component', () => {
   const mockOnClose = vi.fn();
   
@@ -26,6 +36,16 @@ describe('CharacterDetailModal Component', () => {
       ok: true,
       json: async () => mockEpisodes,
     } as Response);
+
+    // Set default mocks for contexts
+    vi.mocked(PortalContext.usePortal).mockReturnValue({ 
+      showPortal: true, 
+      togglePortal: vi.fn() 
+    });
+    vi.mocked(FontContext.useFontPreference).mockReturnValue({ 
+      isRickMode: false, 
+      toggleFontMode: vi.fn() 
+    });
   });
   
   it('renders nothing when not open', () => {
@@ -70,7 +90,7 @@ describe('CharacterDetailModal Component', () => {
   });
   
   it('calls onClose when backdrop is clicked', () => {
-    render(
+    const { container } = render(
       <CharacterDetailModal 
         character={mockCharacter} 
         isOpen={true} 
@@ -78,9 +98,13 @@ describe('CharacterDetailModal Component', () => {
       />
     );
     
-    // Click the backdrop (first element with the class)
-    const backdrop = document.querySelector('.absolute.inset-0.bg-black\\/70');
-    fireEvent.click(backdrop!);
+    // The first div inside the main container is always the backdrop
+    // We need to access it through the container because it uses inline styles
+    const modal = container.firstChild as HTMLElement;
+    const backdrop = modal.children[0] as HTMLElement;
+    
+    // Click the backdrop
+    fireEvent.click(backdrop);
     
     // onClose should be called
     expect(mockOnClose).toHaveBeenCalledTimes(1);
@@ -119,7 +143,7 @@ describe('CharacterDetailModal Component', () => {
     );
     
     // Get the modal content
-    const modalContent = document.querySelector('.relative.max-w-4xl');
+    const modalContent = screen.getByTestId('character-modal');
     expect(modalContent).toHaveClass('backdrop-blur-md');
     expect(modalContent).toHaveClass('bg-black/40');
     
@@ -141,5 +165,30 @@ describe('CharacterDetailModal Component', () => {
     // Check that different classes are applied
     expect(modalContent).not.toHaveClass('backdrop-blur-md');
     expect(modalContent).toHaveClass('bg-white');
+  });
+  
+  it('applies Rick mode styling when isRickMode is true and portal is visible', () => {
+    // Mock both portal visible and Rick mode active
+    vi.mocked(PortalContext.usePortal).mockReturnValue({ 
+      showPortal: true, 
+      togglePortal: vi.fn() 
+    });
+    vi.mocked(FontContext.useFontPreference).mockReturnValue({ 
+      isRickMode: true, 
+      toggleFontMode: vi.fn() 
+    });
+    
+    render(
+      <CharacterDetailModal 
+        character={mockCharacter} 
+        isOpen={true} 
+        onClose={mockOnClose} 
+      />
+    );
+    
+    // Get the modal content
+    const modalContent = screen.getByTestId('character-modal');
+    expect(modalContent).toHaveClass('text-green-400');
+    expect(modalContent).toHaveClass('font-wubba');
   });
 }); 
